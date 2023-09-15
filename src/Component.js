@@ -1,20 +1,30 @@
 import { useEffect, useState } from "react";
-const tabs = ["posts", "comments", "albums"]
 
 function Component() {
-    const [width, setWidth] = useState(window.innerWidth)
-    const handleResize = () => {
-        setWidth(window.innerWidth)
-    }
+    const [avatar, setAvatar] = useState()
     useEffect(() => {
-        window.addEventListener("resize", handleResize)
-        return () => {
-            window.removeEventListener("resize", handleResize)
-        }
-    }, [])
+        avatar && URL.revokeObjectURL(avatar)
+    }, [avatar])
+    const handlePreviewAvatar = (event) => {
+        const file = event.target.files[0]
+        file.preview = URL.createObjectURL(file)
+        setAvatar(file)
+    }
     return (
         <div >
-            <h1>{width}</h1>
+            <input
+                type="file"
+                onChange={handlePreviewAvatar}
+            />
+            {
+                avatar && (
+                    <img
+                        src={avatar.preview}
+                        alt=""
+                        width="80%"
+                    />
+                )
+            }
         </div>
     );
 }
